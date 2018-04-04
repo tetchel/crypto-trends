@@ -1,31 +1,7 @@
 #!/usr/bin/env python3
 
-class Coin:
-    
-    def __init__(self, name, path):
-        self.name = name
-        self.path = path
-
-    def set_data(self, data):
-        self.data = data
-
-    def __str__(self):
-        return self.name + ' at ' + self.path
-
-# Class to contain a single coin data point
-class CoinData:
-    
-    def __init__(self, date, open_, high, low, close, volume, cap):
-        self.date = date
-        self.open_ = open_
-        self.high = high
-        self.low = low
-        self.close = close
-        self.volume = volume
-        self.cap = cap
-    
-    def __str__(self):
-        return 'The data on {} is {} {} {} {} {} {}'.format(self.date, self.open_, self.high, self.low, self.close, self.volume, self.cap)
+from coin import Coin, CoinData
+import cmc_mongo
 
 # Replace data with 'null' if it's invalid
 def normalize(data):
@@ -68,6 +44,7 @@ def parse_coin(coin_data_table):
 
 import urllib.request
 import datetime
+import sys
 from bs4 import BeautifulSoup
 
 base_url = 'https://coinmarketcap.com'
@@ -82,7 +59,6 @@ date_str = '?start=20130428&end='
 now = datetime.datetime.now()
 now_str = now.strftime('%Y%m%d')
 date_str = date_str + now_str
-
 
 
 # First, get /coins/
@@ -100,8 +76,20 @@ for link in coins_soup.find_all('a', { 'class' : 'currency-name-container' }):
 
     #print('coin ' + str(coins[len(coins)-1]))
 
-# Now get the historical data for each coin
+
+# if CL args specified coins, only get those coins, else get all
+if len(sys.argv) > 1:
+    for (index, arg) in enumerate(sys.argv):
+        sys.argv[index] = arg.lower()
+
+    coins = [coin for coin in coins if coin.name.lower() in sys.argv]
+
+print('Getting coins: ')
 for coin in coins:
+    print(coin)
+
+for coin in coins:
+# Now get the historical data for each coin
     coin_response = urllib.request.urlopen(base_url + coin.path + historical_data_path + date_str)
     coin_data = coin_response.read()
     coin_soup = BeautifulSoup(coin_data, 'html.parser')
@@ -111,4 +99,7 @@ for coin in coins:
     #print(data_table)
     data = parse_coin(data_table)
     coin.set_data(data)
+    cmc_mongo.insert(coin)
+    break
+    
 
