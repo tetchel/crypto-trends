@@ -76,6 +76,8 @@ for link in coins_soup.find_all('a', { 'class' : 'currency-name-container' }):
 
     #print('coin ' + str(coins[len(coins)-1]))
 
+# CLEAR THE DB!
+cmc_mongo.clear()
 
 # if CL args specified coins, only get those coins, else get all
 if len(sys.argv) > 1:
