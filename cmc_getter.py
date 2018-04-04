@@ -12,6 +12,59 @@ class Coin:
     def __str__(self):
         return self.name + ' at ' + self.path
 
+# Class to contain a single coin data point
+class CoinData:
+    
+    def __init__(self, date, open_, high, low, close, volume, cap):
+        self.date = date
+        self.open_ = open_
+        self.high = high
+        self.low = low
+        self.close = close
+        self.volume = volume
+        self.cap = cap
+    
+    def __str__(self):
+        return 'The data on {} is {} {} {} {} {} {}'.format(self.date, self.open_, self.high, self.low, self.close, self.volume, self.cap)
+
+# Replace data with 'null' if it's invalid
+def normalize(data):
+    if len(data) == 0 or data == '-':
+        # should log to a file or something
+        return 'null'
+    else:
+        return data
+
+def parse_coin(coin_data_table):
+    all_data = [] 
+    for row in coin_data_table.find_all('tr'):
+        # Skip table headers
+        if row.find_all('th'):
+            continue
+
+        #print(row)
+        tds = row.find_all('td')
+        if len(tds) < 7:
+            print('ERROR on row: ' + str(row))
+            break
+            #continue
+        
+        #print(tds)
+        
+        raw_data_attr = 'data-format-value'
+        # From left to right, the TDs are as follows:
+        # date, Open, High, Low, Close, Volume, Market Cap
+        date = normalize(tds[0].text.strip())
+        open_ = normalize(tds[1][raw_data_attr].strip())
+        high = normalize(tds[2][raw_data_attr].strip())
+        low = normalize(tds[3][raw_data_attr].strip())
+        close = normalize(tds[4][raw_data_attr].strip())
+        volume = normalize(tds[5][raw_data_attr].strip())
+        cap = normalize(tds[6][raw_data_attr].strip())
+
+        all_data.append(CoinData(date, open_, high, low, close, volume, cap))
+
+    return all_data        
 
 import urllib.request
 import datetime
@@ -45,7 +98,7 @@ coins = []
 for link in coins_soup.find_all('a', { 'class' : 'currency-name-container' }):
     coins.append( Coin(link.text.strip(), link['href']) )
 
-    print('coin ' + str(coins[len(coins)-1]))
+    #print('coin ' + str(coins[len(coins)-1]))
 
 # Now get the historical data for each coin
 for coin in coins:
@@ -54,7 +107,8 @@ for coin in coins:
     coin_soup = BeautifulSoup(coin_data, 'html.parser')
 
     data_table = coin_soup.find('table')
-    print(data_table)
-
-    # coin.set_data()
+    #print('here is the data for the coin ' + coin.name)
+    #print(data_table)
+    data = parse_coin(data_table)
+    coin.set_data(data)
 
