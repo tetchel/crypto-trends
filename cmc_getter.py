@@ -100,6 +100,6 @@ for coin in coins:
     data = parse_coin(data_table)
     coin.set_data(data)
     cmc_mongo.insert(coin)
-    break
+    #break
     
 
