@@ -4,7 +4,9 @@ import sys
 from datetime import datetime
 from cmc_mongo import get
 
-coin = sys.argv[1].lower()
+coins = sys.argv[1].lower().split(',')
+coins = [coin.strip() for coin in coins]
+
 start_date = ''
 end_date = ''
 if len(sys.argv) > 2:
@@ -38,6 +40,10 @@ if start_date:
 if end_date:
     end_date_formatted = format_date(end_date)
 
-print('Gathering data for {} between {} and {}'.format(coin, start_date_formatted, end_date_formatted))
-result = get(coin, start_date_formatted, end_date_formatted)
+if start_date_formatted > end_date_formatted:
+    print('Start date cannot be before end date')
+    exit()
+
+print('Gathering data for {} between {} and {}'.format(coins, start_date_formatted, end_date_formatted))
+result = get(coins, start_date_formatted, end_date_formatted)
 
