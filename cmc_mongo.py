@@ -32,7 +32,7 @@ def get(coins, start_date=None, end_date=None):
         selection = { '$or': or_clause }
 
     # dates MUST BE datetime objects
-    if start_date and end_date:
+    if start_date:
         if end_date:
             selection['date'] = { '$gte': start_date, '$lte': end_date }
         else:
