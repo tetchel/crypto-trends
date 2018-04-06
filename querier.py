@@ -40,7 +40,7 @@ if start_date:
 if end_date:
     end_date_formatted = format_date(end_date)
 
-if start_date_formatted > end_date_formatted:
+if start_date and end_date and start_date_formatted > end_date_formatted:
     print('Start date cannot be before end date')
     exit()
 

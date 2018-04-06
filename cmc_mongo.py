@@ -41,7 +41,7 @@ def get(coins, start_date=None, end_date=None):
         selection['date'] = { '$lte': end_date }
 
     print('sel ' + str(selection))
-    result = coins_coll.find(selection)
+    result = coins_coll.find(selection, { '_id': 0 })
     for r in result:
         print(r)
 
