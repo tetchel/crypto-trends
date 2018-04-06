@@ -48,20 +48,20 @@ def format_date(date_str):
     return ''
 
 
-def main():
+def main(args):
     modes = ['cmc', 'trends']
 
-    if len(sys.argv) < 2:
+    if len(args) < 2:
         print('You need to specify a mode (one of {}) and at least one keyword such as "bitcoin"'.format(modes))
         print('Example:')
         print('./querier.py cmc "bitcoin, ethereum" 2017 2018')
         print('will return CMC data for bitcoin and ethereum between (inclusively) Jan 1 2017 and Jan 1 2018')
         exit()
 
-    mode = sys.argv[1].lower().strip()
+    mode = args[0].lower().strip()
     
     # Keywords or coin names, passed as a quoted, comma-delimted string
-    keywords = sys.argv[2].lower().split(',')
+    keywords = args[1].lower().split(',')
     keywords = [keyword.strip() for keyword in keywords]
     
     start_date, end_date = prepare_dates()
@@ -74,6 +74,8 @@ def main():
     elif mode == modes[1]:
         collection = db.trends
         key_name = 'keyword'
+    else:
+        print('Invalid mode ' + mode)
 
     result = query(collection, key_name, keywords, start_date, end_date)
     for r in result:
@@ -81,4 +83,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])
