@@ -40528,6 +40528,23 @@
             "TotalCoinsFreeFloat": "N/A",
             "Url": "/coins/zsc/overview"
         },
+        "ZSC*": {
+            "Algorithm": "N/A",
+            "CoinName": "ZeroState",
+            "FullName": "ZeroState (ZSC*)",
+            "FullyPremined": "0",
+            "Id": "845270",
+            "ImageUrl": "/media/30002000/zsc.png",
+            "Name": "ZSC*",
+            "PreMinedValue": "N/A",
+            "ProofType": "N/A",
+            "SortOrder": "2546",
+            "Sponsored": false,
+            "Symbol": "ZSC*",
+            "TotalCoinSupply": "100000000",
+            "TotalCoinsFreeFloat": "N/A",
+            "Url": "/coins/zscstar/overview"
+        },
         "ZSE": {
             "Algorithm": "X11",
             "CoinName": "ZSEcoin",
