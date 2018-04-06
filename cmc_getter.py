@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from coin import Coin, CoinData
-import cmc_mongo
+from mongo import cmc_insert, db
 
 # Replace data with 'null' if it's invalid
 def normalize(data):
@@ -40,7 +40,10 @@ def parse_coin(coin_data_table):
 
         all_data.append(CoinData(date, open_, high, low, close, volume, cap))
 
-    return all_data        
+    return all_data
+
+def start_date():
+    return '20130428'
 
 import urllib.request
 import datetime
@@ -54,12 +57,13 @@ historical_data_path = 'historical-data/'
 # This is the date parameter added to historical data
 # There doesn't seem to be a way to get today's date from the page
 # so we have to generate that ourselves
-date_str = '?start=20130428&end='
+date_str = '?start=' + start_date() + '&end='
 
 now = datetime.datetime.now()
 now_str = now.strftime('%Y%m%d')
 date_str = date_str + now_str
 
+db.coins.drop()
 
 # First, get /coins/
 coins_response = urllib.request.urlopen(base_url + coins_path)
@@ -76,9 +80,6 @@ for link in coins_soup.find_all('a', { 'class' : 'currency-name-container' }):
 
     #print('coin ' + str(coins[len(coins)-1]))
 
-# CLEAR THE DB!
-cmc_mongo.clear()
-
 # if CL args specified coins, only get those coins, else get all
 if len(sys.argv) > 1:
     for (index, arg) in enumerate(sys.argv):
@@ -86,12 +87,9 @@ if len(sys.argv) > 1:
 
     coins = [coin for coin in coins if coin.name.lower() in sys.argv]
 
-print('Getting coins: ')
 for coin in coins:
-    print(coin)
-
-for coin in coins:
-# Now get the historical data for each coin
+    print('Getting data for coin ' + coin.name)
+    # Now get the historical data for each coin
     coin_response = urllib.request.urlopen(base_url + coin.path + historical_data_path + date_str)
     coin_data = coin_response.read()
     coin_soup = BeautifulSoup(coin_data, 'html.parser')
@@ -101,7 +99,7 @@ for coin in coins:
     #print(data_table)
     data = parse_coin(data_table)
     coin.set_data(data)
-    cmc_mongo.insert(coin)
+    cmc_insert(coin)
     #break
     
 

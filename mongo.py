@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pymongo
-from coin import Coin, CoinData
 
 url = 'mongodb://localhost:27017/'
 db = pymongo.MongoClient(url).coins_db
@@ -9,25 +8,25 @@ if not db:
     print('Failed to connect to DB at ' + url)
     exit()
 
-coins_coll = db.coins
 
-def clear():
-    coins_coll.drop()
-
-# Input: Array of CoinData types
-def insert(coin):
-    print('insert coin ' + coin.name)
-    coin_data = coin.data
-    for day in coin_data:
+def cmc_insert(coin):
+    #print('insert coin ' + coin.name)
+    coins_coll = db.coins
+    for day in coin.data:
         insert_id = coins_coll.insert_one(day.to_dict(coin.name.lower()))
 
-def get(coins, start_date=None, end_date=None):
-    if len(coins) < 2:
-        selection = { 'name': coins[0] }
+
+def trends_insert(keyword, date, interest):
+    insert_id = db.trends.insert_one({'keyword': keyword, 'date': date, 'interest': interest})
+
+
+def query(collection, key_name, keys, start_date=None, end_date=None):
+    if len(keys) < 2:
+        selection = { key_name : keys[0] }
     else:
         or_clause = []
-        for coin in coins:
-            or_clause.append({ 'name': coin })
+        for key in keys:
+            or_clause.append({ key_name : key })
 
         selection = { '$or': or_clause }
 
@@ -40,10 +39,8 @@ def get(coins, start_date=None, end_date=None):
     elif end_date:
         selection['date'] = { '$lte': end_date }
 
-    print('sel ' + str(selection))
-    result = coins_coll.find(selection, { '_id': 0 })
-    for r in result:
-        print(r)
+    print('selection: ' + str(selection))
+    result = collection.find(selection, { '_id': 0 })
 
     return result
 
