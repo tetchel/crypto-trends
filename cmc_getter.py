@@ -71,12 +71,14 @@ coins_data = coins_response.read()
 coins_soup = BeautifulSoup(coins_data, 'html.parser')
 
 coins = []
+rank = 1
 
 # Get all <a class="currency-name-container"
 # The text of the link is the currency name
 # The actual href goes to the currency's page
 for link in coins_soup.find_all('a', { 'class' : 'currency-name-container' }):
-    coins.append( Coin(link.text.strip(), link['href']) )
+    coins.append( Coin(link.text.strip(), rank, link['href']) )
+    rank = rank + 1
 
     #print('coin ' + str(coins[len(coins)-1]))
 

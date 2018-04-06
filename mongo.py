@@ -13,7 +13,7 @@ def cmc_insert(coin):
     #print('insert coin ' + coin.name)
     coins_coll = db.coins
     for day in coin.data:
-        insert_id = coins_coll.insert_one(day.to_dict(coin.name.lower()))
+        insert_id = coins_coll.insert_one(day.to_dict(coin.name.lower(), coin.rank))
 
 
 def trends_insert(keyword, date, interest):

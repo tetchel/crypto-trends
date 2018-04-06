@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import json
-
 class Coin:
     
-    def __init__(self, name, path):
+    def __init__(self, name, rank, path):
         self.name = name
+        self.rank = rank
         self.path = path
 
     def set_data(self, data):
@@ -28,9 +27,10 @@ class CoinData:
         self.volume = volume
         self.cap = cap
 
-    def to_dict(self, coin_name):
+    def to_dict(self, coin_name, coin_rank):
         obj = {}
         obj['name'] = coin_name
+        obj['rank'] = coin_rank
         obj['date'] = self.date
         obj['open'] = self.open_
         obj['high'] = self.high
