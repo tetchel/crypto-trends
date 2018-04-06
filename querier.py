@@ -76,6 +76,7 @@ def main(args):
         key_name = 'keyword'
     else:
         print('Invalid mode ' + mode)
+        exit()
 
     result = query(collection, key_name, keywords, start_date, end_date)
     for r in result:
