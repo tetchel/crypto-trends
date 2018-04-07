@@ -7,7 +7,7 @@ from mongo import query, db
 # Get dates from sysargs and return them as a tuple.
 # If an arg is not given, returns None in its place
 # Index parameters are indices within sys.argv
-def prepare_dates(start_date_index=3, end_date_index=4):
+def prepare_dates(start_date_index=1, end_date_index=2):
     start_date = ''
     end_date = ''
     if len(sys.argv) > start_date_index:
@@ -47,38 +47,53 @@ def format_date(date_str):
     report_malformed_date(date_str)
     return ''
 
+# For each argument 
+def build_conditions(args):
+    conditions = {}
+    for arg in args:
+        split_eq = arg.split('=', 1)
+        key = split_eq[0]
+        value = split_eq[1]
+
+        if key == "start_date" or key == "end_date":
+            date = format_date(value)
+            conditions[key] = date
+        else:
+            split_value = value.lower().split()
+            split_value = [s.strip() for s in split_value]
+            conditions[key] = split_value
+
+    return conditions
+
 
 def main(args):
     modes = ['cmc', 'trends']
 
     if len(args) < 2:
         print('You need to specify a mode (one of {}) and at least one keyword such as "bitcoin"'.format(modes))
-        print('Example:')
-        print('./querier.py cmc "bitcoin, ethereum" 2017 2018')
+        print('Examples:')
+        print('./querier.py cmc start_date=2017 end_date=2018 name="bitcoin ethereum')
+        print('./querier.py cmc sponsored=false algorithm=Scrypt')
         print('will return CMC data for bitcoin and ethereum between (inclusively) Jan 1 2017 and Jan 1 2018')
         exit()
 
     mode = args[0].lower().strip()
-    
-    # Keywords or coin names, passed as a quoted, comma-delimted string
-    keywords = args[1].lower().split(',')
-    keywords = [keyword.strip() for keyword in keywords]
-    
-    start_date, end_date = prepare_dates()
 
-    print('Gathering {} data for {} between {} and {}'.format(mode, keywords, start_date, end_date))
+    conditions = build_conditions(args[1:])
+    
+    # Keywords or coin names, passed as a quoted, comma-delimted stringk
+    
+    print('Gathering {} data for {}'.format(mode, conditions))
 
     if mode == modes[0]:
         collection = db.coins
-        key_name = 'name'
     elif mode == modes[1]:
         collection = db.trends
-        key_name = 'keyword'
     else:
         print('Invalid mode ' + mode)
         exit()
 
-    result = query(collection, key_name, keywords, start_date, end_date)
+    result = query(collection, conditions)
     for r in result:
         print(r)
 

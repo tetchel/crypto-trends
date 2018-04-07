@@ -1,0 +1,79 @@
+Time-series charts (graphing performance of coins)
+
+Bitcoin over all time
+Bitcoin in April 2017 - April 2018
+Bitcoin in November 1 2017 - Feb 1 2018
+
+Bitcoin vs all other coins on these same intervals
+
+Coins using pow/pos, pow, or pos vs coins using other proof types
+Coins without proof types vs coins with proof types
+
+Coins using sha256/sha512 (bitcoin algo) vs coins with other algos
+Coins with scrypt (ether algo) vs coins with other algos
+Coins with scrypt vs coins with sha256/512
+
+could do some pie charts comparing the latter series too, to show proportions of coins using given proof types or algorithms
+
+Trends (back to time-series):
+bitcoin vs trends of blockchain
+bitcoin vs trends of bitcoin
+
+ether vs trends of ethereum
+ether vs trends of ether
+ether vs trends of bitcoin
+
+xrp vs trends of ripple
+xrp vs trends of xrp
+
+all coins but bitcoin vs trends of bitcoin
+all coins but ether vs trends of ethereum
+all coins but xrp vs trends of ripple
+
+Proof Types:
+	"pow/pos",
+	"pow",
+	"n/a",
+	"pos",
+	"tangle",
+	"poi",
+	"lpos",
+	"dpow/pow",
+	"dpos",
+	"pos/lpos",
+	"poa",
+	"pow/npos",
+	"posign",
+	"poc"
+
+Algorithms:
+	"sha256",
+	"ethash",
+	"n/a",
+	"scrypt",
+	"ouroboros",
+	"cryptonight",
+	"pos 3.0",
+	"multiple",
+	"x11",
+	"equihash",
+	"sha-512",
+	"x13",
+	"leased pos",
+	"blake256",
+	"dpos",
+	"pos",
+	"proof-of-authority",
+	"lyra2re",
+	"sha3",
+	"mars",
+	"keccak",
+	"time travel",
+	"progressive-n",
+	"qubit",
+	"groestl",
+	"x16r",
+	"shabal256",
+	"cryptonight-lite",
+	"nist5"
+

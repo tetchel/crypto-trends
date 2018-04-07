@@ -19,16 +19,41 @@ def cmc_insert(coin):
 def trends_insert(keyword, date, interest):
     insert_id = db.trends.insert_one({'keyword': keyword, 'date': date, 'interest': interest})
 
+''' 
+Example of conditions dictionary:
+name="bitcoin, ethereum"
+sponsored="false"
+proof_method="PoW"
+'''
+def query(collection, conditions):
+   
+    start_date = ''
+    end_date = ''
+    print('conditions:')
+    print(conditions)
+    clauses = [] 
+    for key, accepted_values in conditions.items():
+        if key == 'start_date':
+            start_date = accepted_values
+            continue
+        if key == 'end_date':
+            end_date = accepted_values
+            continue
+            
+        if len(accepted_values) < 2:
+            clauses.append({ key : accepted_values[0] })
+        else:
+            or_clause = []
+            for v in accepted_values:
+                or_clause.append({ key : v })
 
-def query(collection, key_name, keys, start_date=None, end_date=None):
-    if len(keys) < 2:
-        selection = { key_name : keys[0] }
+            clauses.append({ '$or': or_clause })
+
+    if len(clauses) < 2:
+        selection = clauses[0]
     else:
-        or_clause = []
-        for key in keys:
-            or_clause.append({ key_name : key })
+        selection = { '$and': clauses }
 
-        selection = { '$or': or_clause }
 
     # dates MUST BE datetime objects
     if start_date:

@@ -7,7 +7,7 @@ from mongo import trends_insert, db
 
 pytrends = TrendReq()
 
-keywords = sys.argv[1].lower().split(',')
+keywords = sys.argv[1].lower().split()
 keywords = [keyword.strip() for keyword in keywords]
 db.trends.drop()
 
