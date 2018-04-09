@@ -9,7 +9,8 @@ pytrends = TrendReq()
 
 keywords = sys.argv[1].lower().split()
 keywords = [keyword.strip() for keyword in keywords]
-db.trends.drop()
+if len(sys.argv) > 2 and sys.argv[2] == 'drop':
+    db.trends.drop()
 
 for kw in keywords:
     print('Getting trends for ' + kw)
