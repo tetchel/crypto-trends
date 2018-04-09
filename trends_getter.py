@@ -9,6 +9,7 @@ pytrends = TrendReq()
 
 if len(sys.argv) > 1 and sys.argv[1] == 'drop':
     db.trends.drop()
+    print('Dropped trends collection')
     exit()
 
 keywords = sys.argv[1:]#.lower().split()
