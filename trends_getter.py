@@ -7,10 +7,13 @@ from mongo import trends_insert, db
 
 pytrends = TrendReq()
 
-keywords = sys.argv[1].lower().split()
-keywords = [keyword.strip() for keyword in keywords]
-if len(sys.argv) > 2 and sys.argv[2] == 'drop':
+if len(sys.argv) > 1 and sys.argv[1] == 'drop':
     db.trends.drop()
+    exit()
+
+keywords = sys.argv[1:]#.lower().split()
+keywords = [keyword.strip() for keyword in keywords]
+print(keywords)
 
 for kw in keywords:
     print('Getting trends for ' + kw)

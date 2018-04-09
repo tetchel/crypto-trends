@@ -7,7 +7,7 @@ echo "Beginning update"
 echo "Getting CMC data, takes about 2 minutes"
 ./cmc_getter.py
 
-keywords="cryptocurrency blockchain bitcoin ethereum ether ripple xrp"
+keywords=
 echo "Getting Trends data, takes about 1 second per keyword"
-./trends_getter.py "$keywords"
+./trends_getter.py cryptocurrency blockchain bitcoin ethereum ether ripple xrp
 echo "Finished updating"
