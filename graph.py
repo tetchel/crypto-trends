@@ -82,6 +82,8 @@ def main(args):
     queryBitcoinNovFeb =  "cmc start_date=2017-11 end_date=2018-02 name=bitcoin" 
     queryBlockchainTrends = "trends keyword=blockchain"
     queryBitcoinTrends = "trends keyword=bitcoin"
+    querysha128Trends = "trends keyword=sha128"
+    querysha256Trends = "trends keyword=sha256"
     queryEtherTrends = "trends keyword=ether"
     queryEthereumTrends = "trends keyword=ethereum"
     queryRippleTrends = "trends keyword=ripple"
@@ -134,7 +136,7 @@ def main(args):
     y = x.astype(np.float)
     y2 = x.astype(np.float)
     ax.set_title('Bitcoin All Time')
-    plt.gca().invert_yaxis()
+  
     plt.tight_layout()
     plt.show()
     fig.savefig('bitcoinAllTime.png')
@@ -179,7 +181,6 @@ def main(args):
     y = x.astype(np.float)
     y2 = x.astype(np.float)
     ax.set_title('Bitcoin April 2017 to April 2018 ')
-    plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.show()
     fig.savefig('bitcoinApril.png')
@@ -223,7 +224,6 @@ def main(args):
     y = x.astype(np.float)
     y2 = x.astype(np.float)
     ax.set_title('Bitcoin November 2017 to February 2018')
-    plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.show()
     fig.savefig('bitcoinNovFeb.png')
@@ -509,10 +509,54 @@ def main(args):
     plt.show()
     fig.savefig('bitcoinVSether.png')
 
-
-
-
-
+    argumentList = queryBitcoinAllTime.split(" ", 3)
+    argumentList2 = queryEthereumAllTime.split(" ", 3)
+    mode = argumentList[0].lower().strip()
+    conditions = build_conditions(argumentList[1:])
+    mode2 = argumentList2[0].lower().strip()
+    conditions2 = build_conditions(argumentList2[1:])
+    # Keywords or coin names, passed as a quoted, comma-delimted stringk
+    print('Gathering {} data for {}'.format(mode, conditions))
+    if mode == modes[0]:
+        collection = db.coins
+    elif mode == modes[1]:
+        collection = db.trends
+    else:
+        print('Invalid mode ' + mode)
+        exit()
+    if mode2 == modes[0]:
+        collection2 = db.coins
+    elif mode2 == modes[1]:
+        collection2 = db.trends
+    else:
+        print('Invalid mode ' + mode2)
+        exit()
+    result = query(collection, conditions)
+    result2 = query(collection2, conditions2)
+    fig = plt.figure()
+    coin1List = []
+    coin2List = []
+    coList2 = []
+    coList1 = []
+    for r in result:
+        coin1List.append(r)
+    for r in result2:
+        coin2List.append(r)
+    ax = fig.add_subplot(111)
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Price')
+    blue_patch = mpatches.Patch(color='blue', label="Bitcoin")
+    red_patch = mpatches.Patch(color='red', label="Ethereum")
+    plt.legend(handles=[red_patch, blue_patch])
+    for c in coin1List:
+        ax.scatter(c['date'],float(c['close']),color='blue')
+    for c2 in coin2List:
+        ax.scatter(c2['date'],float(c2['close']),color='red')    
+    y = x.astype(np.float)
+    y2 = x.astype(np.float)
+    ax.set_title('Bitcoin price and Ethereum price')
+    plt.show()
+    fig.savefig('bitcoinVSethereumPrice.png')
 
 
 if __name__ == "__main__":
