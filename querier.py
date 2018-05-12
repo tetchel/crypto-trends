@@ -72,7 +72,7 @@ def main(args):
     if len(args) < 2:
         print('You need to specify a mode (one of {}) and at least one keyword such as "bitcoin"'.format(modes))
         print('Examples:')
-        print('./querier.py cmc start_date=2017 end_date=2018 name="bitcoin, ethereum')
+        print('./querier.py cmc start_date=2017 end_date=2018 name="bitcoin, ethereum"')
         print('./querier.py cmc sponsored=false algorithm=Scrypt')
         print('will return CMC data for bitcoin and ethereum between (inclusively) Jan 1 2017 and Jan 1 2018')
         exit()
